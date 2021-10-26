@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,6 +82,23 @@ public class TodoController {
 		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	@PutMapping
+	public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
+		String temporatraUserId = "temporary-user";
+		
+		TodoEntity entity = TodoDTO.toEntity(dto);
+		entity.setUserId(temporatraUserId);
+
+		List<TodoEntity> entities = service.update(entity);
+
+		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+		return ResponseEntity.ok().body(response);
+
 	}
 	
 }
