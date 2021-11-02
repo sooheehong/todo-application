@@ -56,7 +56,7 @@ public class TodoController {
 			entity.setUserId(temporaryUserId);
 			
 			List<TodoEntity> entities = service.create(entity);
-			
+						
 			List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 			
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
@@ -127,5 +127,54 @@ public class TodoController {
 		}
 
 	}
+
+	//// extjs �� ����
+	
+	@PostMapping("/extjs")
+	public ResponseEntity<?> createTodoByExtjs(@RequestBody TodoDTO dto) {
+		try { 
+			String temporaryUserId = "temporary-user";
+			
+			TodoEntity entity = TodoDTO.toEntity(dto);
+			entity.setId(null);
+			entity.setUserId(temporaryUserId);
+			
+			List<TodoEntity> entities = service.create(entity);
+						
+			List<TodoDTO> dtos = entities.stream()
+									.skip((entities.size() - 1)).limit(1)
+									.map(TodoDTO::new).collect(Collectors.toList());
+			
+			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+			
+			return ResponseEntity.ok().body(response);
+		}
+		catch (Exception e) {
+			String error = e.getMessage();
+
+			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
+			
+			return ResponseEntity.badRequest().body(response);
+		}
+	}
+
+	@PutMapping("/extjs")
+	public ResponseEntity<?> updateTodoByExtjs(@RequestBody TodoDTO dto) {
+		String temporatraUserId = "temporary-user";
+		
+		TodoEntity entity = TodoDTO.toEntity(dto);
+		entity.setUserId(temporatraUserId);
+
+		List<TodoEntity> entities = service.update(entity);
+
+		List<TodoDTO> dtos = entities.stream()
+								.filter(row -> row.getId() == dto.getId())
+								.map(TodoDTO::new).collect(Collectors.toList());
+
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+		return ResponseEntity.ok().body(response);
+
+	}	
 	
 }
