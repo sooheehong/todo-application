@@ -20,6 +20,7 @@ import com.example.demo.dto.TodoDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.model.TodoEntity;
 import com.example.demo.model.UserEntity;
+import com.example.demo.security.TokenProvider;
 import com.example.demo.service.TodoService;
 import com.example.demo.service.UserService;
 
@@ -29,6 +30,10 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private TokenProvider tokenProvider;
+
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -64,9 +69,11 @@ public class UserController {
 				userDTO.getEmail(), userDTO.getPassword());
 		
 		if (user != null) {
+			final String token = tokenProvider.create(user);
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.email(user.getEmail())
 					.id(user.getId())
+					.token(token)
 					.build();
 
 			return ResponseEntity.ok().body(responseUserDTO);
