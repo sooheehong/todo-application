@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.TodoEntity;
@@ -28,7 +29,7 @@ public class UserService {
 		
 		final String email = userEntity.getEmail();
 		if(userRepository.existsByEmail(email)) {
-			log.warn("Email alread exists {}", email);
+			log.warn("Email already exists {}", email);
 			throw new RuntimeException("Email alread exists");
 		}
 		
@@ -36,8 +37,15 @@ public class UserService {
 		
 	}
 	
-	public UserEntity getByCreedentials(final String email, final String password) {
-		return userRepository.findByEmailAndPassword(email, password);
+	public UserEntity getByCreedentials(final String email, final String password,
+		final PasswordEncoder encoder) {
+		final UserEntity user = userRepository.findByEmail(email);
+
+		if (user != null && encoder.matches(password, user.getPassword())){
+			return user;
+		}
+
+		return null;
 	}
 
 }
