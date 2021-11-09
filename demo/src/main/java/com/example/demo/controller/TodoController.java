@@ -120,13 +120,11 @@ public class TodoController {
 	//// extjs 전용 서비스
 
 	@PostMapping("/extjs")
-	public ResponseEntity<?> createTodoByExtjs(@RequestBody TodoDTO dto) {
+	public ResponseEntity<?> createTodoByExtjs(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
 		try {
-			String temporaryUserId = "temporary-user";
-
 			TodoEntity entity = TodoDTO.toEntity(dto);
 			entity.setId(null);
-			entity.setUserId(temporaryUserId);
+			entity.setUserId(userId);
 
 			List<TodoEntity> entities = service.create(entity);
 
@@ -146,11 +144,9 @@ public class TodoController {
 	}
 
 	@PutMapping("/extjs")
-	public ResponseEntity<?> updateTodoByExtjs(@RequestBody TodoDTO dto) {
-		String temporatraUserId = "temporary-user";
-
+	public ResponseEntity<?> updateTodoByExtjs(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
 		TodoEntity entity = TodoDTO.toEntity(dto);
-		entity.setUserId(temporatraUserId);
+		entity.setUserId(userId);
 
 		List<TodoEntity> entities = service.update(entity);
 
