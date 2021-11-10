@@ -36,6 +36,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.5'
 
+	runtimeOnly 'mysql:mysql-connector-java'
 }
 
 test {
