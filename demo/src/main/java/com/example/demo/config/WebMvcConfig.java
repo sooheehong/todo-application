@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addMapping("/**")
 		.allowedOrigins("http://localhost:3000", 
 			"http://localhost:1841",
-			"http://prod-todo-frontend.ap-northeast-2.elasticbeanstalk.com/")
+			"http://product-todo-frontend.ap-northeast-2.elasticbeanstalk.com/")
 		.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCDJ", "OPTIONS")
 		.allowedHeaders("*")
 		.allowCredentials(true)
